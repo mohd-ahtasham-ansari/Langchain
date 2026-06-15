@@ -1,86 +1,55 @@
-# Environments
-.env
-.venv
-env/
+# ==============================================================================
+# STRICT WHITELIST APPROACH: Ignore everything except specific code files
+# ==============================================================================
+
+# 1. Ignore EVERYTHING by default
+*
+
+# 2. Allow Git to traverse directories (needed for the rules below to work)
+!*/
+
+# 3. Whitelist the specific file types you WRITE code in
+!*.py
+!*.ipynb
+!*.md
+!*.txt
+!*.json
+
+# 4. Whitelist necessary configuration files
+!.gitignore
+!pyproject.toml
+!.python-version
+!README.md
+
+# ==============================================================================
+# 5. RE-IGNORE specific directories (overriding the directory traversal above)
+# ==============================================================================
+
+# Virtual Environments
+.venv/
 venv/
-ENV/
-env.bak/
-venv.bak/
+env/
 
-# API keys and secrets (IMPORTANT for LangChain!)
-*.key
-*.pem
-
-# Langchain & Vector Stores
-# Common directories for local vector databases like ChromaDB
-chroma_db/
-chroma/
-*.sqlite3
-*.db
-
-# Logs and outputs
-logs/
-*.log
-
-# Byte-compiled / optimized / DLL files
+# IDE and Cache
 __pycache__/
-*.py[cod]
-*$py.class
-
-# C extensions
-*.so
-
-# Distribution / packaging
-.Python
-build/
-develop-eggs/
-dist/
-downloads/
-eggs/
-.eggs/
-lib/
-lib64/
-parts/
-sdist/
-var/
-wheels/
-pip-wheel-metadata/
-share/python-wheels/
-*.egg-info/
-.installed.cfg
-*.egg
-MANIFEST
-
-# Installer logs
-pip-log.txt
-pip-delete-this-directory.txt
-
-# Unit test / coverage reports
-htmlcov/
-.tox/
-.nox/
-.coverage
-.coverage.*
-.cache
-nosetests.xml
-coverage.xml
-*.cover
-*.py,cover
-.hypothesis/
+.vscode/
+.idea/
+.ipynb_checkpoints/
 .pytest_cache/
 .ruff_cache/
 .mypy_cache/
 
-# Jupyter Notebook
-.ipynb_checkpoints
+# LangChain / Vector Stores / Data
+chroma_db/
+chroma/
+logs/
+data/
+datasets/
+models/
 
-# VS Code / IDEs
-.vscode/
-.idea/
-*.swp
-*.swo
-.project
-.pydevproject
-
-# macOS
-.DS_Store
+# Explicitly ignore environment variables/keys (Double protection)
+.env
+*.key
+*.pem
+*.sqlite3
+*.db
