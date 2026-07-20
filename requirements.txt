@@ -13,3 +13,7 @@ fastapi
 uvicorn
 requests
 langchain-huggingface
+transformers
+torch
+torchvision
+torchaudio
