@@ -7,7 +7,11 @@ from langchain_mistralai import ChatMistralAI
 
 model = ChatMistralAI(model ="mistral-small-2506",temperature=0.5)
 
-response = model.invoke("hi")
 
-
-print(response.content)
+while True:
+    prompt = input("you : ")
+    if prompt.lower() == "exit":
+        break
+    response = model.invoke(prompt)
+    print("AI :",response.content) 
+    print("\n")
