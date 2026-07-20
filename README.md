@@ -27,6 +27,18 @@ Learning LangChain involved hands-on debugging. Here are some key errors I encou
 - **Environment & Key Management**:
   - **The Learning**: Safely managing multiple API keys using `.env` files is critical. LangChain's seamless integration with environment variables makes it easy to manage configurations securely.
 
+- **Parameter Typos (`422 Unprocessable Entity`)**:
+  - **The Error**: Encountered a 422 HTTP error when initializing models (like Mistral) because of a typo in the parameters, specifically `temprature` instead of `temperature`.
+  - **The Learning**: LangChain often passes unexpected kwargs directly to the underlying API providers. A small typo in model parameters can lead to hard-to-debug HTTP errors. It is crucial to verify parameter spelling and valid ranges.
+
+- **Local LLMs & Dependencies (`PyTorch was not found` / `ImportError`)**:
+  - **The Error**: When trying to run models locally via `HuggingFacePipeline` or `HuggingFaceEmbeddings`, I encountered missing dependencies or `PyTorch was not found` errors.
+  - **The Learning**: Using local models requires a properly configured environment. Installing specific integrations like `langchain-huggingface` and backend dependencies like `sentence-transformers` or `torch` is essential.
+
+- **Invalid Model IDs & Authentication**:
+  - **The Error**: Encountered `BadRequestError: 400 - invalid model ID` and HuggingFace API token authentication errors.
+  - **The Learning**: Always verify the exact model name required by the specific provider and ensure environment variables (e.g., `HUGGINGFACEHUB_API_TOKEN`) are correctly loaded.
+
 ## 💪 Confidence in LangChain
 
 Despite the initial learning curve and the errors encountered along the way, I am **highly confident** in LangChain as my go-to framework. 
