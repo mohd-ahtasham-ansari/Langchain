@@ -1,9 +1,9 @@
 from dotenv import load_dotenv,find_dotenv
 load_dotenv(find_dotenv())
 
-from langchain.chat_models import init_chat_model
+from langchain_mistralai import ChatMistralAI
 
-model = init_chat_model("groq:llama-3.1-8b-instant")
+model = ChatMistralAI(model="mistral-small-latest") # or "mistral-small-latest"
 
 print(model)
 
