@@ -5,11 +5,10 @@ llm = HuggingFacePipeline.from_model_id(
     task="text-generation",
     pipeline_kwargs=dict(
         max_new_tokens=512,
-        do_sample=False,
+        do_sample=True,
         repetition_penalty=1.03,
-    ),
-    temperature=0.7,
-
+        temperature=0.7,
+    )
 )
 
 chat_model = ChatHuggingFace(llm=llm)
