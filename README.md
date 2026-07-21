@@ -11,6 +11,15 @@ Throughout this learning phase, I've dived deep into various core components of 
 4. **Messages & Chat History** (`4-messages.ipynb`) - Managing conversation state with Human, AI, and System messages.
 5. **Structured Output** (`5-structuredOutput.ipynb`) - Forcing LLMs to return predictable, structured data (e.g., JSON).
 6. **Middleware & Advanced Chains** (`6-middleware.ipynb`) - Building complex workflows and handling middleware concepts.
+## 🛠️ Mini Projects
+
+### 1. Shikamaru AI Chatbot (`langchain_practical_use/chat_models/UIchatbot.py`)
+A web-based conversational AI built using **Streamlit** and **LangChain**. It leverages the `Mistral` model (via `ChatMistralAI`) and is instructed via a `SystemMessage` to act like Shikamaru Nara from Naruto—highly intelligent but strategically lazy.
+
+**Key Features:**
+- **Streamlit UI**: Created an interactive chat interface using `st.chat_message` and `st.chat_input`.
+- **Session State Memory**: Streamlit re-runs the script on every user interaction. I learned how to use `st.session_state` to persist the conversation history so the LangChain model maintains context.
+- **Persona Prompting**: Set up a persistent character using a `SystemMessage` at the start of the chat history.
 
 ## 🚧 Errors Faced & Lessons Learned
 
@@ -38,6 +47,9 @@ Learning LangChain involved hands-on debugging. Here are some key errors I encou
 - **Invalid Model IDs & Authentication**:
   - **The Error**: Encountered `BadRequestError: 400 - invalid model ID` and HuggingFace API token authentication errors.
   - **The Learning**: Always verify the exact model name required by the specific provider and ensure environment variables (e.g., `HUGGINGFACEHUB_API_TOKEN`) are correctly loaded.
+- **Streamlit Execution & Session Management**:
+  - **The Error**: The Streamlit server would sometimes stop unexpectedly (exit code 1) or fail to start properly in the terminal.
+  - **The Learning**: I learned that running local web servers like Streamlit requires stable terminal environments. Additionally, dealing with Streamlit's stateless nature taught me the absolute necessity of using `st.session_state` to store message history; otherwise, the LangChain model loses the entire conversation context upon every new input.
 
 ## 💪 Confidence in LangChain
 
