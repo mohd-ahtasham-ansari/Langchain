@@ -16,7 +16,8 @@ Throughout this learning phase, I've dived deep into various core components of 
 ### 1. Shikamaru AI Chatbot (`langchain_practical_use/chat_models/UIchatbot.py`)
 A web-based conversational AI built using **Streamlit** and **LangChain**. It leverages the `Mistral` model (via `ChatMistralAI`) and is instructed via a `SystemMessage` to act like Shikamaru Nara from Naruto—highly intelligent but strategically lazy.
 
-![Shikamaru AI Chatbot UI](1-mini_project_aiChatbot.png)
+<img width="1919" height="827" alt="1-mini_project_aiChatbot" src="https://github.com/user-attachments/assets/20d013b8-5da2-465d-887d-6ebef992f476" />
+
 
 **Key Features:**
 - **Streamlit UI**: Created an interactive chat interface using `st.chat_message` and `st.chat_input`.
