@@ -11,7 +11,9 @@ Throughout this learning phase, I've dived deep into various core components of 
 4. **Messages & Chat History** (`4-messages.ipynb`) - Managing conversation state with Human, AI, and System messages.
 5. **Structured Output** (`5-structuredOutput.ipynb`) - Forcing LLMs to return predictable, structured data (e.g., JSON).
 6. **Middleware & Advanced Chains** (`6-middleware.ipynb`) - Building complex workflows and handling middleware concepts.
-## 🛠️ Mini Projects
+## 🛠️ LangChain Practical Use (Mini Projects)
+
+While the initial tutorials focused on understanding core concepts, the `langchain_practical_use` directory is where these concepts are put into practice. This folder demonstrates real-world applications of LangChain by building standalone scripts and full mini-projects. It is structured to separate different practical implementations, such as chat models and embedding models, showing how to integrate everything from UIs (Streamlit) to specific persona prompting.
 
 ### 1. Shikamaru AI Chatbot (`langchain_practical_use/chat_models/UIchatbot.py`)
 A web-based conversational AI built using **Streamlit** and **LangChain**. It leverages the `Mistral` model (via `ChatMistralAI`) and is instructed via a `SystemMessage` to act like Shikamaru Nara from Naruto—highly intelligent but strategically lazy.
