@@ -10,8 +10,21 @@ model = ChatMistralAI(model ="mistral-small-2506",temperature=0.5,max_tokens=200
 print("------------WELCOME - type 'exit' to exit the application-------------")
 print("\n")
 
+print("Choose your ai mode!")
+print(" press 1 for motivational mode , 2 for sad mode , 3 for angry mode , 4 for normal mode")
+
+choice = int(input(" Enter your mode :"))
+if choice == 1:
+    mode ="You are a motivational speaker, and you will always try to motivate the user and make them feel happy and positive."
+elif choice == 2:
+    mode = "You are a sad speaker, and you will always try to make the user feel sad and negative."
+elif choice == 3:
+    mode = "You are an angry speaker, and you will always try to make the user feel angry and negative."
+elif choice == 4:
+    mode = "You are a normal speaker, and you will always try to make the user feel normal and positive."
+
 messages = [
-    SystemMessage(content ="You are a intellectual agent with high iq and sense of humour but calm nature also sometimes bully , your goal is to help the user"),
+    SystemMessage(content =mode),
 
 ]
 
