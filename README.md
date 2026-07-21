@@ -24,6 +24,17 @@ A web-based conversational AI built using **Streamlit** and **LangChain**. It le
 - **Session State Memory**: Streamlit re-runs the script on every user interaction. I learned how to use `st.session_state` to persist the conversation history so the LangChain model maintains context.
 - **Persona Prompting**: Set up a persistent character using a `SystemMessage` at the start of the chat history.
 
+### 2. Terminal Persona Chatbot (`langchain_practical_use/chat_models/chatbot.py`)
+A CLI-based conversational AI where users can select the AI's mood/persona before starting the chat (e.g., Motivational, Sad, Angry, or Normal). Built using the `Mistral` model, it dynamically adjusts behavior using a `SystemMessage`.
+
+### 3. Local Model & HuggingFace Integrations (`langchain_practical_use/chat_models/`)
+Explorations into connecting with the HuggingFace Hub and running models locally to reduce API dependency. Includes scripts like `HUGGINGFACE.PY` and `localmodel.py`.
+
+### 4. Text Embeddings (`langchain_practical_use/embedding_models/`)
+Practical examples of generating vector embeddings for text data, which is essential for RAG (Retrieval-Augmented Generation) applications. 
+- **Google GenAI Embeddings** (`embeddings.py`)
+- **HuggingFace MiniLM Embeddings** (`huggingfaceembedding.py`)
+
 ## 🚧 Errors Faced & Lessons Learned
 
 Learning LangChain involved hands-on debugging. Here are some key errors I encountered and what I learned from them:
