@@ -1,74 +1,197 @@
 # LangChain Learning Journey 🚀
 
-Welcome to my LangChain learning repository! This project documents my phase of exploring and mastering LangChain, a powerful framework for developing applications powered by language models.
+Welcome to my LangChain learning repository! This project documents my journey exploring and mastering **LangChain** and **LangGraph**, from foundational concepts and multi-provider model integration to advanced agent middleware, Human-in-the-Loop (HITL) workflows, and production guardrails.
+
+---
+
+## 📁 Repository Structure
+
+```text
+├── 1-mini_project_aiChatbot.png     # Screenshot of the Streamlit Shikamaru AI Chatbot
+├── README.md                        # Project documentation and learning log
+├── main.py                          # Entry point script
+├── pyproject.toml                   # Project dependencies and environment metadata
+├── requirements.txt                 # Pip dependency definitions
+├── updatedlangchain/                # Core concepts & interactive Jupyter notebooks
+│   ├── 1-langchain_intro.ipynb      # LangChain basics & architecture
+│   ├── 2-modelintegration.ipynb     # Connecting OpenAI, Groq, Mistral, Google GenAI
+│   ├── 3-tools.ipynb                # Tool binding & function calling
+│   ├── 4-messages.ipynb             # Message types (Human, AI, System, Tool) & memory
+│   ├── 5-structuredOutput.ipynb     # Typed & validated schemas via Pydantic & JSON
+│   ├── 6-middleware.ipynb           # Summarization & Human-in-the-loop agent middleware
+│   └── langchain_gaurdrails.ipynb   # Deterministic & model-based guardrails, PII & hooks
+└── langchain_practical_use/         # Hands-on scripts & mini-applications
+    ├── chat_models/
+    │   ├── UIchatbot.py             # Streamlit-based Shikamaru Persona Chatbot
+    │   ├── chatbot.py               # Interactive CLI persona chatbot
+    │   ├── chat.py                  # Direct Mistral AI chat completion script
+    │   ├── localmodel.py            # Local HuggingFace pipeline with TinyLlama
+    │   └── HUGGINGFACE.PY           # HuggingFace Endpoint integration (DeepSeek)
+    └── embedding_models/
+        ├── embeddings.py            # Google Generative AI vector embeddings
+        └── huggingfaceembedding.py  # HuggingFace MiniLM vector embeddings
+```
+
+---
 
 ## 📚 Topics Covered
 
-Throughout this learning phase, I've dived deep into various core components of LangChain, as structured in the `updatedlangchain` directory:
-1. **Introduction to LangChain** (`1-langchain_intro.ipynb`) - Understanding the basics and core philosophy.
-2. **Model Integration** (`2-modelintegration.ipynb`) - Connecting to different LLMs (OpenAI, Groq, etc.).
-3. **Tools & Function Calling** (`3-tools.ipynb`) - Empowering models to take actions and use external tools.
-4. **Messages & Chat History** (`4-messages.ipynb`) - Managing conversation state with Human, AI, and System messages.
-5. **Structured Output** (`5-structuredOutput.ipynb`) - Forcing LLMs to return predictable, structured data (e.g., JSON).
-6. **Middleware & Advanced Chains** (`6-middleware.ipynb`) - Building complex workflows and handling middleware concepts.
+The `updatedlangchain/` directory contains interactive walkthroughs diving deep into core abstractions and modern agent patterns:
+
+1. **Introduction to LangChain** (`1-langchain_intro.ipynb`)
+   - Overview of the LangChain ecosystem and core design principles.
+   - Initializing prompts, runnables, and chain pipelines.
+
+2. **Model Integration** (`2-modelintegration.ipynb`)
+   - Multi-provider setup across **OpenAI**, **Groq**, **Mistral AI**, and **Google GenAI**.
+   - Comparing streaming, temperature control, and provider parameters.
+
+3. **Tools & Function Calling** (`3-tools.ipynb`)
+   - Defining custom tools with the `@tool` decorator.
+   - Binding tools to models and handling structured tool calls and execution outputs.
+
+4. **Messages & Chat History** (`4-messages.ipynb`)
+   - Managing conversational state using `HumanMessage`, `AIMessage`, `SystemMessage`, and `ToolMessage`.
+   - Handling multi-turn dialogues and context retention.
+
+5. **Structured Output** (`5-structuredOutput.ipynb`)
+   - Forcing models to adhere to strictly typed schemas using **Pydantic** models.
+   - Validating fields, parsing JSON responses, and preventing schema hallucinations.
+
+6. **Agent Middleware & Context Management** (`6-middleware.ipynb`)
+   - **SummarizationMiddleware**: Automatically truncating or summarizing conversation histories using token limits, message counts, or fraction triggers to prevent context window overflow.
+   - State checkpointing with LangGraph's `InMemorySaver` for multi-turn persistence.
+
+7. **Agent Guardrails & Safety Middleware** (`langchain_gaurdrails.ipynb`) 🛡️
+   - **Architectural Approaches**: Comparing deterministic (regex/keyword) filtering vs. model-based LLM safety evaluators.
+   - **Built-in `PIIMiddleware`**:
+     - Redacting sensitive information (e.g. emails with `strategy="redact"`).
+     - Masking confidential numbers (e.g. credit cards with `strategy="mask"`).
+     - Blocking requests containing credentials via custom detectors and universal API key regex (`strategy="block"`).
+   - **Human-in-the-Loop Middleware (`HumanInTheLoopMiddleware`)**:
+     - Intercepting high-stakes tool executions (sending emails, modifying databases) with `interrupt_on`.
+     - Resuming paused workflows using `Command(resume={"decisions": [...]})` with review actions (approve, reject, edit).
+   - **Custom Middleware Hooks**:
+     - *Inbound Defense (`before_agent`)*: Deterministic keyword filtering using `@hook_config(can_jump_to=["end"])` to abort unsafe prompts at zero LLM token cost.
+     - *Outbound Defense (`after_agent`)*: Model-based safety judge verifying LLM outputs before they reach the user.
+
+---
+
 ## 🛠️ LangChain Practical Use (Mini Projects)
 
-While the initial tutorials focused on understanding core concepts, the `langchain_practical_use` directory is where these concepts are put into practice. This folder demonstrates real-world applications of LangChain by building standalone scripts and full mini-projects. It is structured to separate different practical implementations, such as chat models and embedding models, showing how to integrate everything from UIs (Streamlit) to specific persona prompting.
+The `langchain_practical_use/` directory demonstrates how these foundational concepts translate into standalone scripts and interactive applications.
 
 ### 1. Shikamaru AI Chatbot (`langchain_practical_use/chat_models/UIchatbot.py`)
-A web-based conversational AI built using **Streamlit** and **LangChain**. It leverages the `Mistral` model (via `ChatMistralAI`) and is instructed via a `SystemMessage` to act like Shikamaru Nara from Naruto—highly intelligent but strategically lazy.
+A web-based conversational application built with **Streamlit** and **LangChain** featuring the persona of Shikamaru Nara from *Naruto*.
+- **Streamlit UI**: Clean chat layout using `st.chat_message` and `st.chat_input`.
+- **Session State Persistence**: Uses `st.session_state.messages` to preserve conversational history across Streamlit reruns.
+- **Persona Prompting**: Persistent character guidance via a foundational `SystemMessage`.
 
-<img width="1919" height="827" alt="1-mini_project_aiChatbot" src="https://github.com/user-attachments/assets/20d013b8-5da2-465d-887d-6ebef992f476" />
-
-
-**Key Features:**
-- **Streamlit UI**: Created an interactive chat interface using `st.chat_message` and `st.chat_input`.
-- **Session State Memory**: Streamlit re-runs the script on every user interaction. I learned how to use `st.session_state` to persist the conversation history so the LangChain model maintains context.
-- **Persona Prompting**: Set up a persistent character using a `SystemMessage` at the start of the chat history.
+<img width="1919" height="827" alt="1-mini_project_aiChatbot" src="1-mini_project_aiChatbot.png" />
 
 ### 2. Terminal Persona Chatbot (`langchain_practical_use/chat_models/chatbot.py`)
-A CLI-based conversational AI where users can select the AI's mood/persona before starting the chat (e.g., Motivational, Sad, Angry, or Normal). Built using the `Mistral` model, it dynamically adjusts behavior using a `SystemMessage`.
+A CLI-based chatbot allowing users to choose dynamic conversational tones (Motivational, Sad, Angry, Normal) driven by `ChatMistralAI` and configurable system instructions.
 
-### 3. Local Model & HuggingFace Integrations (`langchain_practical_use/chat_models/`)
-Explorations into connecting with the HuggingFace Hub and running models locally to reduce API dependency. Includes scripts like `HUGGINGFACE.PY` and `localmodel.py`.
+### 3. Stoic Poetry Generator (`langchain_practical_use/chat_models/chat.py`)
+A minimal testing script demonstrating parameterized completions using `ChatMistralAI` with strict `max_tokens` limits and temperature tuning.
 
-### 4. Text Embeddings (`langchain_practical_use/embedding_models/`)
-Practical examples of generating vector embeddings for text data, which is essential for RAG (Retrieval-Augmented Generation) applications. 
-- **Google GenAI Embeddings** (`embeddings.py`)
-- **HuggingFace MiniLM Embeddings** (`huggingfaceembedding.py`)
+### 4. Local & Remote Hugging Face Models
+- **Offline Inference (`localmodel.py`)**: Runs local models on device (e.g., `TinyLlama/TinyLlama-1.1B-Chat-v1.0`) using `HuggingFacePipeline` without cloud API latency or costs.
+- **Serverless Hub Endpoint (`HUGGINGFACE.PY`)**: Connects to hosted Hugging Face endpoints (such as `deepseek-ai/DeepSeek-R1`) using `HuggingFaceEndpoint` and `ChatHuggingFace`.
+
+### 5. Vector Embeddings (`langchain_practical_use/embedding_models/`)
+Techniques for embedding generation essential for vector search and RAG systems:
+- **Google GenAI Embeddings (`embeddings.py`)**: Vector generation with dimensionality control (`gemini-embedding-001`).
+- **Hugging Face Sentence Transformers (`huggingfaceembedding.py`)**: Lightweight, local embeddings using `sentence-transformers/all-MiniLM-L6-v2`.
+
+---
 
 ## 🚧 Errors Faced & Lessons Learned
 
-Learning LangChain involved hands-on debugging. Here are some key errors I encountered and what I learned from them:
+Hands-on development with cutting-edge agent frameworks naturally brings hurdles. Here is what went wrong and how it was resolved:
 
-- **`RateLimitError` (OpenAI 429 Insufficient Quota)**: 
-  - **The Error**: Encountered `openai.RateLimitError` due to exceeding current API quotas (`insufficient_quota`).
-  - **The Learning**: I learned how to handle API limits gracefully and the importance of having fallback models. This led to exploring and integrating alternative, fast providers like **Groq** (using `llama-3.1-8b-instant`) to keep development moving without friction.
-  
-- **Output Parsing Errors**:
-  - **The Error**: Issues where the LLM's response didn't perfectly match the expected schema, resulting in parsing exceptions (e.g., tracking `parsing_error` when using structured outputs).
-  - **The Learning**: I realized that LLMs can be unpredictable. I learned how to use LangChain's structured output parsers, how to write robust prompts to enforce JSON structures, and how to handle edge cases where the LLM deviates from instructions.
+- **`RateLimitError` (OpenAI 429 Insufficient Quota)**:
+  - *The Error*: Exhausted OpenAI credits when testing models and safety evaluators.
+  - *The Learning*: Built resilience into the codebase by introducing fast, generous fallback providers such as **Groq** (`llama-3.1-8b-instant`, `llama-3.3-70b-versatile`, `gpt-oss-20b`), decoupling development from single-vendor downtime or quotas.
 
-- **Environment & Key Management**:
-  - **The Learning**: Safely managing multiple API keys using `.env` files is critical. LangChain's seamless integration with environment variables makes it easy to manage configurations securely.
+- **Agent Interrupts & Checkpointing in HITL Middleware**:
+  - *The Error*: Attempting to use `HumanInTheLoopMiddleware` or interrupt commands without persistent state resulted in errors or lost agent memory.
+  - *The Learning*: Interventions and approval loops require a checkpointer (e.g. `InMemorySaver()`) along with thread-specific configurations (`configurable={"thread_id": "..."}`) so LangGraph can store interrupted state and resume via `Command(resume=...)`.
 
-- **Parameter Typos (`422 Unprocessable Entity`)**:
-  - **The Error**: Encountered a 422 HTTP error when initializing models (like Mistral) because of a typo in the parameters, specifically `temprature` instead of `temperature`.
-  - **The Learning**: LangChain often passes unexpected kwargs directly to the underlying API providers. A small typo in model parameters can lead to hard-to-debug HTTP errors. It is crucial to verify parameter spelling and valid ranges.
+- **PII Detection Nuances & Strategy Enforcement**:
+  - *The Error*: Default detection patterns failed to detect diverse API key formats, or sensitive strings bypassed naive filters.
+  - *The Learning*: Implemented comprehensive regex (`UNIVERSAL_API_KEY_REGEX`) covering provider prefixes (OpenAI, Groq, Google, AWS, Slack, GitHub) and mastered different enforcement strategies (`strategy="redact"`, `"mask"`, or `"block"`).
 
-- **Local LLMs & Dependencies (`PyTorch was not found` / `ImportError`)**:
-  - **The Error**: When trying to run models locally via `HuggingFacePipeline` or `HuggingFaceEmbeddings`, I encountered missing dependencies or `PyTorch was not found` errors.
-  - **The Learning**: Using local models requires a properly configured environment. Installing specific integrations like `langchain-huggingface` and backend dependencies like `sentence-transformers` or `torch` is essential.
+- **Output Parsing & Schema Inconsistencies**:
+  - *The Error*: LLMs occasionally returned Markdown wrappers around JSON or missing schema properties, triggering parsing errors.
+  - *The Learning*: Switched to Pydantic-based structured outputs with `with_structured_output` and explicit schemas, adding guardrails to ensure clean, type-validated data objects.
 
-- **Invalid Model IDs & Authentication**:
-  - **The Error**: Encountered `BadRequestError: 400 - invalid model ID` and HuggingFace API token authentication errors.
-  - **The Learning**: Always verify the exact model name required by the specific provider and ensure environment variables (e.g., `HUGGINGFACEHUB_API_TOKEN`) are correctly loaded.
-- **Streamlit Execution & Session Management**:
-  - **The Error**: The Streamlit server would sometimes stop unexpectedly (exit code 1) or fail to start properly in the terminal.
-  - **The Learning**: I learned that running local web servers like Streamlit requires stable terminal environments. Additionally, dealing with Streamlit's stateless nature taught me the absolute necessity of using `st.session_state` to store message history; otherwise, the LangChain model loses the entire conversation context upon every new input.
+- **Local Pipeline Environment & Torch Dependencies**:
+  - *The Error*: Running local Hugging Face pipelines triggered `PyTorch was not found` and missing wheel warnings.
+  - *The Learning*: Configured local virtual environments with matching `torch`, `transformers`, and `langchain-huggingface` package versions for seamless offline execution.
+
+- **HTTP 422 Unprocessable Entity (Parameter Typos)**:
+  - *The Error*: Misspelled kwargs (such as `temprature` instead of `temperature`) were passed straight to provider endpoints.
+  - *The Learning*: Understood that LangChain keyword dictionaries route directly to underlying client SDKs. Verified strict keyword spelling and validation against model specifications.
+
+- **Streamlit State Management Across Re-runs**:
+  - *The Error*: Conversational context vanished after each user message submission in Streamlit.
+  - *The Learning*: Leveraged Streamlit's `st.session_state` to store message arrays, synchronizing web UI state with LangChain message histories.
+
+---
+
+## ⚙️ Environment & Setup
+
+### Prerequisites
+- Python `>= 3.11` (Repository tested on `3.14`)
+- Virtual environment manager (`uv` or `venv`)
+
+### 1. Installation
+Using `uv`:
+```bash
+uv venv
+source .venv/bin/activate  # On Windows: .venv\Scripts\activate
+uv pip install -r requirements.txt
+```
+
+Or using standard `pip`:
+```bash
+python -m venv .venv
+.venv\Scripts\activate
+pip install -r requirements.txt
+```
+
+### 2. Environment Variables
+Create a `.env` file in the root directory:
+```env
+# Primary LLM API Keys
+GROQ_API_KEY=your_groq_api_key_here
+MISTRAL_API_KEY=your_mistral_api_key_here
+OPENAI_API_KEY=your_openai_api_key_here
+GEMINI_API_KEY=your_google_gemini_api_key_here
+
+# Hugging Face
+HUGGINGFACEHUB_ACCESS_TOKEN=your_hf_token_here
+```
+
+### 3. Running the Mini-Projects
+- **Launch the Streamlit Chatbot:**
+  ```bash
+  streamlit run langchain_practical_use/chat_models/UIchatbot.py
+  ```
+- **Run the CLI Persona Chatbot:**
+  ```bash
+  python langchain_practical_use/chat_models/chatbot.py
+  ```
+- **Run Embeddings:**
+  ```bash
+  python langchain_practical_use/embedding_models/embeddings.py
+  ```
+
+---
 
 ## 💪 Confidence in LangChain
 
-Despite the initial learning curve and the errors encountered along the way, I am **highly confident** in LangChain as my go-to framework. 
+Mastering LangChain has demonstrated the immense power of having a unified, composable interface over diverse AI providers. 
 
-It provides an incredibly robust and flexible abstraction layer over raw LLM APIs. By standardizing how we interact with models, tools, and prompts, LangChain makes it remarkably easy to swap out components (like smoothly switching from OpenAI to Groq when hitting rate limits) and build complex, reliable AI applications. The framework handles the heavy lifting, allowing me to focus on building the actual logic of the AI agents. I am excited to leverage this framework to build production-ready applications!
+From effortless provider swapping (switching from OpenAI to Groq seamlessly) to orchestrating stateful agents with deterministic input filters, PII redactors, and human approval interrupts, LangChain and LangGraph provide the robust scaffolding needed to build production-grade, reliable AI systems.
